@@ -22,12 +22,12 @@ import kotlinx.android.synthetic.main.fragment_calendar.*
 import kotlinx.android.synthetic.main.fragment_month.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.log
 
 
 class MonthFragment(
     private var currentYear: Int,
     private var currentMonth: Int,
-    private var currentDay: Int
 ) : Fragment() {
 
     private var calendarItems: MutableList<MutableMap<String, Int>> = mutableListOf()
@@ -70,15 +70,16 @@ class MonthFragment(
         calendarItems = setCalendarItems(dayStart)
         dayInMonthAdapter.setListItems(calendarItems)
 
-        dayInMonthAdapter.setCurrentDay(currentDay)
-
         getDateHaveDiaryByMonth(currentYear, currentMonth)
-
+        setCurrentDay(currentYear, currentMonth)
     }
 
     private fun setCalendarItems(string: String): MutableList<MutableMap<String, Int>> {
         var list: MutableList<MutableMap<String, Int>> = mutableListOf()
         var index = 0
+
+        //day start of week
+
         when (string) {
             "Monday" -> index = 1
             "Tuesday" -> index = 2
@@ -92,24 +93,22 @@ class MonthFragment(
         //last day of Previous Month
 
         val calendarPrevious = Calendar.getInstance()
-        calendarPrevious.set(Calendar.MONTH, currentMonth - 2)
-        val max = calendarPrevious.getActualMaximum(Calendar.DAY_OF_MONTH)
-        calendarPrevious.set(Calendar.DAY_OF_MONTH, max)
-        val dayOfPreviousMonth = calendarPrevious.get(Calendar.DATE)
+        calendarPrevious.set(currentYear, currentMonth - 2, 1)
+        val lastDayOfPreviousMonth = calendarPrevious.getActualMaximum(Calendar.DAY_OF_MONTH)
+        calendarPrevious.clear()
 
         //last day of current month
 
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.MONTH, currentMonth - 1)
-        val dayOfMonth = calendar.getActualMaximum(Calendar.DATE)
+        calendar.set(currentYear, currentMonth - 1, 1)
+        val lastDayOfCurrentMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
 
         //get position of day one of current month
-        calendar.set(currentYear, currentMonth - 1, 1)
-        val dayOneOfWeek = shiftIndexOfWeek(calendar.get(Calendar.DAY_OF_WEEK), index)
+        val positionFirstDayOfWeek = shiftIndexOfWeek(calendar.get(Calendar.DAY_OF_WEEK), index)
 
         //get Day Of Previous Month
-        if (dayOneOfWeek > 1) {
-            for (day in dayOfPreviousMonth - dayOneOfWeek + 2..dayOfPreviousMonth) {
+        if (positionFirstDayOfWeek > 1) {
+            for (day in lastDayOfPreviousMonth - positionFirstDayOfWeek + 2..lastDayOfPreviousMonth) {
                 val map = mutableMapOf<String, Int>()
                 map["day"] = day
                 map["dayOfCurrentMonth"] = 0
@@ -119,7 +118,7 @@ class MonthFragment(
 
         //get day  of current month
         var week: Int = 0
-        for (day in 1..dayOfMonth) {
+        for (day in 1..lastDayOfCurrentMonth) {
             val map = mutableMapOf<String, Int>()
             map["day"] = day
             calendar.set(currentYear, currentMonth - 1, day)
@@ -139,7 +138,7 @@ class MonthFragment(
                 list.add(map)
             }
         }
-        calendarPrevious.clear()
+
         calendar.clear()
 
         return list
@@ -152,7 +151,7 @@ class MonthFragment(
     }
 
     private fun formatMonthYear(year: Int, month: Int): List<String> {
-        val time = FormatTime.formatDateTime(year, month, "YYYY MMMM ")
+        val time = FormatTime.formatDateTime(year, month, 1, "YYYY MMMM")
         var list: List<String> = time.split(" ")
         return list
     }
@@ -323,5 +322,15 @@ class MonthFragment(
         intent.putExtra("day", it["day"])
         startActivity(intent)
         requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+    }
+
+    private fun setCurrentDay(year: Int, month: Int) {
+        val calendarC = Calendar.getInstance()
+        val yearC = calendarC.get(Calendar.YEAR)
+        val monthC = calendarC.get(Calendar.MONTH) + 1
+        val dateC = calendarC.get(Calendar.DATE)
+        if (yearC == year && monthC == month) {
+            dayInMonthAdapter.setCurrentDay(dateC)
+        }
     }
 }

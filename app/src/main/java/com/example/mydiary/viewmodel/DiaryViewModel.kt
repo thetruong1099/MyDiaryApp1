@@ -10,7 +10,7 @@ import com.example.mydiary.model.Diary
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
-class DiaryViewModel(application: Application): ViewModel() {
+class DiaryViewModel(application: Application) : ViewModel() {
     private val diaryRepository: DiaryRepository = DiaryRepository(application)
 
     fun insertDiary(diary: Diary) = viewModelScope.launch {
@@ -21,18 +21,24 @@ class DiaryViewModel(application: Application): ViewModel() {
         diaryRepository.updateDiary(diary)
     }
 
-    fun getDiaryDateByMonth(year:Int, month:Int): LiveData<List<Int>> = diaryRepository.getDiaryDateByMonth(year, month)
+    fun getDiaryDateByMonth(year: Int, month: Int): LiveData<List<Int>> =
+        diaryRepository.getDiaryDateByMonth(year, month)
 
-    fun getDiaryOfDate(year: Int,month: Int,date:Int): LiveData<MutableList<Diary>> = diaryRepository.getDiaryOfDate(year, month, date)
+    fun getDiaryOfDate(year: Int, month: Int, date: Int): LiveData<MutableList<Diary>> =
+        diaryRepository.getDiaryOfDate(year, month, date)
 
-    fun getAllDiary():LiveData<MutableList<Diary>> = diaryRepository.getAllDiary()
+    fun getAllDiary(): LiveData<MutableList<Diary>> = diaryRepository.getAllDiary()
 
-    fun getDetailDiary(year: Int, month: Int, date: Int, time:String):LiveData<Diary> = diaryRepository.getDetailDiary(year, month, date, time)
+    fun getDetailDiary(year: Int, month: Int, date: Int, time: String): LiveData<Diary> =
+        diaryRepository.getDetailDiary(year, month, date, time)
 
-    class DiaryViewModelFactory(private val application: Application):ViewModelProvider.Factory{
+    fun searchDiary(keyword: String): LiveData<MutableList<Diary>> =
+        diaryRepository.searchDiary(keyword)
+
+    class DiaryViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
 
-            if (modelClass.isAssignableFrom(DiaryViewModel::class.java)){
+            if (modelClass.isAssignableFrom(DiaryViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
                 return DiaryViewModel(application) as T
             }

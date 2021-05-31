@@ -18,12 +18,17 @@ class DiaryRepository(app: Application) {
 
     suspend fun updateDiary(diary: Diary) = diaryDao.updateDiary(diary)
 
-    fun getDiaryDateByMonth(year:Int, month:Int): LiveData<List<Int>> = diaryDao.getDiaryDateByMonth(year, month)
+    fun getDiaryDateByMonth(year: Int, month: Int): LiveData<List<Int>> =
+        diaryDao.getDiaryDateByMonth(year, month)
 
-    fun getDiaryOfDate(year: Int, month: Int, date:Int): LiveData<MutableList<Diary>> = diaryDao.getDiaryOfDate(year, month, date)
+    fun getDiaryOfDate(year: Int, month: Int, date: Int): LiveData<MutableList<Diary>> =
+        diaryDao.getDiaryOfDate(year, month, date)
 
-    fun getAllDiary():LiveData<MutableList<Diary>> = diaryDao.getAllDiary()
+    fun getAllDiary(): LiveData<MutableList<Diary>> = diaryDao.getAllDiary()
 
-    fun getDetailDiary(year: Int, month: Int, date: Int, time:String):LiveData<Diary> = diaryDao.getDetailDiary(year, month, date, time)
+    fun getDetailDiary(year: Int, month: Int, date: Int, time: String): LiveData<Diary> =
+        diaryDao.getDetailDiary(year, month, date, time)
+
+    fun searchDiary(keyword: String): LiveData<MutableList<Diary>> = diaryDao.searchDiary(keyword)
 
 }

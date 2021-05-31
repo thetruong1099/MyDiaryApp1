@@ -22,16 +22,17 @@ class DayInMonthAdapter(
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var date = itemView.tv_cell_day
-        private val layoutDayInMonth = itemView.layout_day_in_month
 
         fun onBind(map: MutableMap<String, Int>) {
             date.text = map["day"].toString()
 
+            if (map["dayOfCurrentMonth"] == 0) {
+                date.setTextColor(Color.parseColor("#80000000"))
+            } else date.setTextColor(Color.parseColor("#000000"))
+
             if (currentDay == map["day"] && map["dayOfCurrentMonth"] == 1) {
                 date.setTextColor(Color.parseColor("#ff7f50"))
-            } else if (map["dayOfCurrentMonth"] == 0) {
-                    date.setTextColor(Color.parseColor("#80000000"))
-            } else date.setTextColor(Color.parseColor("#000000"))
+            }
 
             for (i in listDayHasDiary) {
                 if (i["day"] == map["day"] && i["dayOfCurrentMonth"] == map["dayOfCurrentMonth"]) {

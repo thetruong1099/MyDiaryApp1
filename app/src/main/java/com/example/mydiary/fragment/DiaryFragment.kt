@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mydiary.R
 import com.example.mydiary.activity.DetailDiaryActivity
+import com.example.mydiary.activity.SearchActivity
 import com.example.mydiary.adapter.AllDiaryAdapter
 import com.example.mydiary.model.Diary
 import com.example.mydiary.viewmodel.DiaryViewModel
@@ -47,9 +48,15 @@ class DiaryFragment : Fragment() {
         }
 
         diaryViewModel.getAllDiary().observe(this, Observer {
-            if (it.size==0) tv_nofication_no_data.visibility = View.GONE
-            else{
-                it.sortWith(compareBy<Diary>({ it.year }, { it.month }, {it.date}, {it.time}).reversed())
+            if (it.size == 0) tv_nofication_no_data.visibility = View.GONE
+            else {
+                it.sortWith(
+                    compareBy<Diary>(
+                        { it.year },
+                        { it.month },
+                        { it.date },
+                        { it.time }).reversed()
+                )
                 allDiaryAdapter.setListDiary(it)
             }
         })
@@ -57,15 +64,15 @@ class DiaryFragment : Fragment() {
         val navControler = findNavController()
         btn_back.setOnClickListener { navControler.popBackStack() }
         btn_search.setOnClickListener {
-            var searchFragment = SearchFragment()
-            searchFragment.show(childFragmentManager, "TAG")
-
+            var intent = Intent(context, SearchActivity::class.java)
+            startActivity(intent)
+            requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
     }
 
-    private val onItemClick:(diary:Diary)->Unit={
+    private val onItemClick: (diary: Diary) -> Unit = {
         var intent = Intent(context, DetailDiaryActivity::class.java)
-        intent.putExtra("Detail Diary",it)
+        intent.putExtra("Detail Diary", it)
         startActivity(intent)
         requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
     }

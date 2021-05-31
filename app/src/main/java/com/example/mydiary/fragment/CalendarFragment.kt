@@ -1,5 +1,6 @@
 package com.example.mydiary.fragment
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -54,12 +55,12 @@ class CalendarFragment : Fragment() {
         currentDay = calendar.get(Calendar.DATE)
 
         var fragmentList = MutableList<Fragment>(size) { index -> Fragment() }
-        fragmentList.set(size / 2 - 1, MonthFragment(currentYear, currentMonth - 1, 0))
+        fragmentList.set(size / 2 - 1, MonthFragment(currentYear, currentMonth - 1))
         fragmentList.set(
             size / 2,
-            MonthFragment(currentYear, currentMonth, currentDay)
+            MonthFragment(currentYear, currentMonth)
         )
-        fragmentList.set(size / 2 + 1, MonthFragment(currentYear, currentMonth + 1, 0))
+        fragmentList.set(size / 2 + 1, MonthFragment(currentYear, currentMonth + 1))
 
         adapterViewPagers = CalendarViewPagerAdapter(
             fragmentList,
@@ -81,26 +82,37 @@ class CalendarFragment : Fragment() {
                 super.onPageSelected(position)
                 var month = currentMonth + (position - size / 2)
 
-                tv_year_month.text = FormatTime.formatDateTime(currentYear, month,"YYYY MMMM")
+                tv_year_month.text = formmatMonthYear(currentYear, month)
 
                 if (position < jump) {
                     jump = position
                     adapterViewPagers.setFragmentAtPosition(
                         position - 1,
-                        MonthFragment(currentYear, month - 1, 0)
+                        MonthFragment(currentYear, month - 1)
                     )
 
                 } else if (position > jump) {
                     jump = position
                     adapterViewPagers.setFragmentAtPosition(
                         position + 1,
-                        MonthFragment(currentYear, month + 1, 0)
+                        MonthFragment(currentYear, month + 1)
                     )
+                }
+
+                if (position != size / 2) {
+                    tv_current_day.visibility = View.VISIBLE
+                    tv_current_day.text = currentDay.toString()
+                } else {
+                    tv_current_day.visibility = View.GONE
                 }
             }
         })
 
-        tv_date_has_diary.text = FormatTime.formatDateTime(currentYear, currentMonth, currentDay, "dd MMMM YYYY")
+        tv_current_day.setOnClickListener { view_pager_calendar.currentItem = size / 2 }
+
+        tv_date_has_diary.text =
+            FormatTime.formatDateTime(currentYear, currentMonth, currentDay, "dd MMMM YYYY")
+
         getDiaryOfCurrentDate(currentYear, currentMonth, currentDay)
     }
 
@@ -124,10 +136,17 @@ class CalendarFragment : Fragment() {
         diaryOfDateAdapter.setListItem(list)
     }
 
-    private val onItemClick:(diary:Diary) ->Unit = {
+    private val onItemClick: (diary: Diary) -> Unit = {
         val intent = Intent(context, DetailDiaryActivity::class.java)
         intent.putExtra("Detail Diary", it)
         startActivity(intent)
         requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+    }
+
+    private fun formmatMonthYear(year: Int, month: Int): String {
+        var formatDate = SimpleDateFormat("YYYY MMMM ", Locale.UK)
+        val setCalendar = Calendar.getInstance()
+        setCalendar.set(year, month - 1, 10)
+        return formatDate.format(setCalendar.time)
     }
 }

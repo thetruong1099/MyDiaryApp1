@@ -10,7 +10,7 @@ import com.example.mydiary.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
-class SearchFragment : BottomSheetDialogFragment() {
+class DayStartOfWeekFragment : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +22,6 @@ class SearchFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false)
+        return inflater.inflate(R.layout.fragment_day_start_of_week, container, false)
     }
 }

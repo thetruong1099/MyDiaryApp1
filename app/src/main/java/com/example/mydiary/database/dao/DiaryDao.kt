@@ -25,6 +25,9 @@ interface DiaryDao {
     fun getAllDiary(): LiveData<MutableList<Diary>>
 
     @Query("select * from diary_table where year_col = :year and month_col =:month and date_col =:date and time_col =:time")
-    fun getDetailDiary(year: Int, month: Int, date: Int, time:String):LiveData<Diary>
+    fun getDetailDiary(year: Int, month: Int, date: Int, time: String): LiveData<Diary>
+
+    @Query("select * from diary_table where title_col like :keyword or content_col like :keyword")
+    fun searchDiary(keyword: String): LiveData<MutableList<Diary>>
 
 }
