@@ -18,6 +18,10 @@ class DiaryRepository(app: Application) {
 
     suspend fun updateDiary(diary: Diary) = diaryDao.updateDiary(diary)
 
+    suspend fun delete(diary: Diary) = diaryDao.deleteDiary(diary)
+
+    suspend fun deleteAllDiary() = diaryDao.deleteAllDiary()
+
     fun getDiaryDateByMonth(year: Int, month: Int): LiveData<List<Int>> =
         diaryDao.getDiaryDateByMonth(year, month)
 

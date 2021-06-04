@@ -4,13 +4,23 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import com.example.mydiary.R
+import com.example.mydiary.viewmodel.SharedPreferenceViewModel
 import kotlinx.android.synthetic.main.activity_reset_pass.*
 import kotlinx.coroutines.*
 
 class ResetPassActivity : AppCompatActivity() {
 
     private lateinit var job: Job
+
+    private val sharePreferenceViewModel by lazy {
+        ViewModelProvider(
+            this,
+            SharedPreferenceViewModel.SharePreferenceViewModelFactory(this)
+        )[SharedPreferenceViewModel::class.java]
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,8 +36,8 @@ class ResetPassActivity : AppCompatActivity() {
 
     private fun counterTime() {
         job = CoroutineScope(Dispatchers.Default).launch {
-            var numTime = 31
-            repeat(31) {
+            var numTime = 11
+            repeat(11) {
                 numTime--
                 delay(1000)
                 updateUi(numTime)
@@ -37,20 +47,12 @@ class ResetPassActivity : AppCompatActivity() {
     }
 
     private fun intentToConfirmPassword() {
-        resetPassword()
+        sharePreferenceViewModel.setPassWord("123456")
         var intent = Intent(this, ConfirmResetPassActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
     }
-
-    private fun resetPassword() {
-        val sharedPreferences = getSharedPreferences("myData", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putString("myPassword", "1234567")
-        editor.commit()
-    }
-
 
     private suspend fun updateUi(number: Int) {
         withContext(Dispatchers.Main) {

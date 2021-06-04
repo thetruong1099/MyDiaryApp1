@@ -12,7 +12,8 @@ import java.time.Month
 import java.util.*
 
 class AllDiaryAdapter(
-    private val onclick: (Diary) -> Unit
+    private val onclick: (Diary) -> Unit,
+    private val onDeleteClick:(Diary) ->Unit
 ) : RecyclerView.Adapter<AllDiaryAdapter.ViewHolder>() {
 
     private var listDiary: MutableList<Diary> = mutableListOf()
@@ -21,12 +22,14 @@ class AllDiaryAdapter(
         private val tvTime = itemView.tv_time
         private val tvTitle = itemView.tv_title
         private val tvStory = itemView.tv_story
+        private val btnDetele = itemView.btnDelete
 
         fun onBind(diary: Diary) {
             tvTime.text = formantTime(diary.year, diary.month, diary.date) + diary.time
             tvTitle.text = diary.title
             tvStory.text = diary.content
             itemView.setOnClickListener { onclick(diary) }
+            btnDetele.setOnClickListener { onDeleteClick(diary) }
         }
 
     }

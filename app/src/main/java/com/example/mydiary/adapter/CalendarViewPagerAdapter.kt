@@ -1,6 +1,7 @@
 package com.example.mydiary.adapter
 
 import android.util.Log
+import androidx.core.os.persistableBundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle

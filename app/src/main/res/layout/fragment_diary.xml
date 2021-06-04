@@ -7,16 +7,15 @@
     android:orientation="vertical"
     tools:context=".fragment.DiaryFragment">
 
-
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Diary"
-        android:textSize="24sp"
-        android:textColor="@color/color1"
-        android:fontFamily="@font/lato_black"
         android:layout_marginTop="20dp"
+        android:fontFamily="@font/lato_black"
+        android:text="Diary"
+        android:textColor="@color/color1"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -35,8 +34,8 @@
         android:id="@+id/btn_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
         android:src="@drawable/baseline_search_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -55,13 +54,26 @@
         android:id="@+id/tv_nofication_no_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Không có nhật ký"
-        android:textSize="28sp"
-        android:textColor="@color/color1"
         android:fontFamily="@font/lato_blackltalic"
+        android:text="Không có nhật ký"
+        android:textColor="@color/color1"
+        android:textSize="28sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/rv_diary" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddNewDiary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:backgroundTint="@color/river"
+        android:src="@drawable/baseline_add_24"
+
+        android:layout_marginBottom="50dp"
+        android:layout_marginEnd="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

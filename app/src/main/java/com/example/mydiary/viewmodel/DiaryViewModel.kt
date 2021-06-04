@@ -21,6 +21,12 @@ class DiaryViewModel(application: Application) : ViewModel() {
         diaryRepository.updateDiary(diary)
     }
 
+    fun delete(diary: Diary) = viewModelScope.launch {
+        diaryRepository.delete(diary)
+    }
+
+    fun deleteAllDiary() = viewModelScope.launch { diaryRepository.deleteAllDiary() }
+
     fun getDiaryDateByMonth(year: Int, month: Int): LiveData<List<Int>> =
         diaryRepository.getDiaryDateByMonth(year, month)
 

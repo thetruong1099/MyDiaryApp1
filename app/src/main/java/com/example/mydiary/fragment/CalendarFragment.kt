@@ -19,7 +19,12 @@ import com.example.mydiary.adapter.DiaryOfDateAdapter
 import com.example.mydiary.model.Diary
 import com.example.mydiary.util.FormatTime
 import com.example.mydiary.viewmodel.DiaryViewModel
+import com.example.mydiary.viewmodel.SharedPreferenceViewModel
 import kotlinx.android.synthetic.main.fragment_calendar.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -31,11 +36,19 @@ class CalendarFragment : Fragment() {
     private val size = 1000
     private var dayStart: String = "Sunday"
     private lateinit var adapterViewPagers: CalendarViewPagerAdapter
+
     private val diaryViewModel: DiaryViewModel by lazy {
         ViewModelProvider(
             this,
             DiaryViewModel.DiaryViewModelFactory(requireActivity().application)
         )[DiaryViewModel::class.java]
+    }
+
+    private val sharePreferenceViewModel by lazy {
+        ViewModelProvider(
+            this,
+            SharedPreferenceViewModel.SharePreferenceViewModelFactory(requireContext())
+        )[SharedPreferenceViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -49,10 +62,17 @@ class CalendarFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
+        //set textview day of week
+        getDayStartFromDB()
+
+        //get current year, month, day
+
         val calendar = Calendar.getInstance()
         currentYear = calendar.get(Calendar.YEAR)
         currentMonth = calendar.get(Calendar.MONTH) + 1
         currentDay = calendar.get(Calendar.DATE)
+
+        tv_year_month.text = formatMonthYear(currentYear, currentMonth)
 
         var fragmentList = MutableList<Fragment>(size) { index -> Fragment() }
         fragmentList.set(size / 2 - 1, MonthFragment(currentYear, currentMonth - 1))
@@ -75,14 +95,13 @@ class CalendarFragment : Fragment() {
 
         view_pager_calendar.registerOnPageChangeCallback(object :
             ViewPager2.OnPageChangeCallback() {
-
             var jump = size / 2
 
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 var month = currentMonth + (position - size / 2)
 
-                tv_year_month.text = formmatMonthYear(currentYear, month)
+                tv_year_month.text = formatMonthYear(currentYear, month)
 
                 if (position < jump) {
                     jump = position
@@ -143,10 +162,84 @@ class CalendarFragment : Fragment() {
         requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
     }
 
-    private fun formmatMonthYear(year: Int, month: Int): String {
+    private fun formatMonthYear(year: Int, month: Int): String {
         var formatDate = SimpleDateFormat("YYYY MMMM ", Locale.UK)
         val setCalendar = Calendar.getInstance()
         setCalendar.set(year, month - 1, 10)
         return formatDate.format(setCalendar.time)
+    }
+
+    private fun getDayStartFromDB() {
+        sharePreferenceViewModel.getDayStart().observe(this, androidx.lifecycle.Observer {
+            setDayStartTextView(it)
+        })
+    }
+
+    private fun setDayStartTextView(string: String) {
+        when (string) {
+            "Monday" -> {
+                tv_day_first.text = "MON"
+                tv_day_second.text = "TUE"
+                tv_day_third.text = "WED"
+                tv_day_fourth.text = "THUR"
+                tv_day_fifth.text = "FRI"
+                tv_day_sixth.text = "SAT"
+                tv_day_seventh.text = "SUN"
+            }
+            "Tuesday" -> {
+                tv_day_first.text = "TUE"
+                tv_day_second.text = "WED"
+                tv_day_third.text = "THUR"
+                tv_day_fourth.text = "FRI"
+                tv_day_fifth.text = "SAT"
+                tv_day_sixth.text = "SUN"
+                tv_day_seventh.text = "MON"
+            }
+            "Wednesday" -> {
+                tv_day_first.text = "WED"
+                tv_day_second.text = "THUR"
+                tv_day_third.text = "FRI"
+                tv_day_fourth.text = "SAT"
+                tv_day_fifth.text = "SUN"
+                tv_day_sixth.text = "MON"
+                tv_day_seventh.text = "TUE"
+            }
+            "Thursday" -> {
+                tv_day_first.text = "THUR"
+                tv_day_second.text = "FRI"
+                tv_day_third.text = "SAT"
+                tv_day_fourth.text = "SUN"
+                tv_day_fifth.text = "MON"
+                tv_day_sixth.text = "TUE"
+                tv_day_seventh.text = "WED"
+            }
+            "Friday" -> {
+                tv_day_first.text = "FRI"
+                tv_day_second.text = "SAT"
+                tv_day_third.text = "SUN"
+                tv_day_fourth.text = "MON"
+                tv_day_fifth.text = "TUE"
+                tv_day_sixth.text = "WED"
+                tv_day_seventh.text = "THUR"
+            }
+            "Saturday" -> {
+                tv_day_first.text = "SAT"
+                tv_day_second.text = "SUN"
+                tv_day_third.text = "MON"
+                tv_day_fourth.text = "TUE"
+                tv_day_fifth.text = "WED"
+                tv_day_sixth.text = "THUR"
+                tv_day_seventh.text = "FRI"
+            }
+            "Sunday" -> {
+                tv_day_first.text = "SUN"
+                tv_day_second.text = "MON"
+                tv_day_third.text = "TUE"
+                tv_day_fourth.text = "WED"
+                tv_day_fifth.text = "THUR"
+                tv_day_sixth.text = "FRI"
+                tv_day_seventh.text = "SAT"
+            }
+        }
     }
 }

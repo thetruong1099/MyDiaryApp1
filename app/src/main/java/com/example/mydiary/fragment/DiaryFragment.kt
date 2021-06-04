@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mydiary.R
 import com.example.mydiary.activity.DetailDiaryActivity
 import com.example.mydiary.activity.SearchActivity
+import com.example.mydiary.activity.WriteDiaryActivity
 import com.example.mydiary.adapter.AllDiaryAdapter
 import com.example.mydiary.model.Diary
 import com.example.mydiary.viewmodel.DiaryViewModel
@@ -39,7 +40,7 @@ class DiaryFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        val allDiaryAdapter = AllDiaryAdapter(onItemClick)
+        val allDiaryAdapter = AllDiaryAdapter(onItemClick, onDeleteClick)
 
         rv_diary.apply {
             adapter = allDiaryAdapter
@@ -64,9 +65,21 @@ class DiaryFragment : Fragment() {
         val navControler = findNavController()
         btn_back.setOnClickListener { navControler.popBackStack() }
         btn_search.setOnClickListener {
-            var intent = Intent(context, SearchActivity::class.java)
+            val intent = Intent(context, SearchActivity::class.java)
             startActivity(intent)
-            requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+            requireActivity().overridePendingTransition(
+                R.anim.slide_in_right,
+                R.anim.slide_out_left
+            )
+        }
+        fabAddNewDiary.setOnClickListener {
+            val intent = Intent(context, WriteDiaryActivity::class.java)
+            intent.putExtra("checkFromDiaryFragment", true)
+            startActivity(intent)
+            requireActivity().overridePendingTransition(
+                R.anim.slide_in_right,
+                R.anim.slide_out_left
+            )
         }
     }
 
@@ -75,5 +88,9 @@ class DiaryFragment : Fragment() {
         intent.putExtra("Detail Diary", it)
         startActivity(intent)
         requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+    }
+
+    private val onDeleteClick: (diary: Diary) ->Unit ={
+        diaryViewModel.delete(it)
     }
 }

@@ -41,10 +41,10 @@ class WriteDiaryActivity : AppCompatActivity() {
 
         //form detail diary activity
 
-        var check =  intent.getBooleanExtra("check", false)
+        var check = intent.getBooleanExtra("check", false)
 
         var diaryEdit = Diary()
-        if (check){
+        if (check) {
             diaryEdit = intent.getSerializableExtra("Diary") as Diary
             year = diaryEdit.year
             month = diaryEdit.month
@@ -55,7 +55,16 @@ class WriteDiaryActivity : AppCompatActivity() {
             edt_story.setText(diaryEdit.content)
         }
 
-        tv_date_time.text = FormatTime.formatDateTime(year, month, date,"EEEE, dd MMMM YYYY")
+        //from diary fragment
+        val checkFromDiaryFragment = intent.getBooleanExtra("checkFromDiaryFragment", false)
+        if (checkFromDiaryFragment) {
+            var calender = Calendar.getInstance()
+            year = calender.get(Calendar.YEAR)
+            month = calender.get(Calendar.MONTH + 1)
+            date = calender.get(Calendar.DATE)
+        }
+
+        tv_date_time.text = FormatTime.formatDateTime(year, month, date, "EEEE, dd MMMM YYYY")
 
         val theme = AlertDialog.THEME_HOLO_LIGHT
 
@@ -68,7 +77,12 @@ class WriteDiaryActivity : AppCompatActivity() {
                     month = monthOfYear + 1
                     date = dayOfMonth
 
-                    tv_date_time.text = FormatTime.formatDateTime(year, monthOfYear + 1, dayOfMonth,"EEEE, dd MMMM YYYY")
+                    tv_date_time.text = FormatTime.formatDateTime(
+                        year,
+                        monthOfYear + 1,
+                        dayOfMonth,
+                        "EEEE, dd MMMM YYYY"
+                    )
                 },
                 Calendar.getInstance().get(Calendar.YEAR),
                 Calendar.getInstance().get(Calendar.MONTH),
@@ -84,12 +98,11 @@ class WriteDiaryActivity : AppCompatActivity() {
 
             if (title == "" || content == "") showDialog("Không để chóng các trường")
             else {
-                if (check){
+                if (check) {
                     diaryEdit.title = title
                     diaryEdit.content = content
                     diaryViewModel.updateDiary(diaryEdit)
-                }
-                else {
+                } else {
                     val diary = Diary(year, month, date, time, title, content)
                     diaryViewModel.insertDiary(diary)
                 }

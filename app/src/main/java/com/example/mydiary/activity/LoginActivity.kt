@@ -7,10 +7,20 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Window
 import android.view.WindowManager
+import androidx.lifecycle.ViewModelProvider
 import com.example.mydiary.R
+import com.example.mydiary.viewmodel.SharedPreferenceViewModel
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
+
+    private val sharePreferenceViewModel by lazy {
+        ViewModelProvider(
+            this,
+            SharedPreferenceViewModel.SharePreferenceViewModelFactory(this)
+        )[SharedPreferenceViewModel::class.java]
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -20,14 +30,13 @@ class LoginActivity : AppCompatActivity() {
         var password = data.getStringExtra("password")
         edt_password_login.setText(password)
 
-        var sharedPreferences = getSharedPreferences("myData", Context.MODE_PRIVATE)
-        var passwordSetted = sharedPreferences.getString("myPassword","")
+        var passwordSetted = sharePreferenceViewModel.getPassword()
 
         btn_login.setOnClickListener {
             var curentPassword = edt_password_login.text.toString()
 
             if (curentPassword != passwordSetted){
-                showDialogCheckPass("Password nhiều hơn 6 ký tự")
+                showDialogCheckPass("Sai Password")
             }else{
                 var intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)

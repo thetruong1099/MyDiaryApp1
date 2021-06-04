@@ -21,7 +21,8 @@ class DayInMonthAdapter(
     private var listDayHasDiary: MutableList<MutableMap<String, Int>> = mutableListOf()
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private var date = itemView.tv_cell_day
+        private val date = itemView.tv_cell_day
+        private val layout = itemView.layout_day_in_month
 
         fun onBind(map: MutableMap<String, Int>) {
             date.text = map["day"].toString()
@@ -36,7 +37,7 @@ class DayInMonthAdapter(
 
             for (i in listDayHasDiary) {
                 if (i["day"] == map["day"] && i["dayOfCurrentMonth"] == map["dayOfCurrentMonth"]) {
-                    date.setBackgroundResource(R.drawable.back_ground_item_day_in_month)
+                    layout.setBackgroundResource(R.drawable.back_ground_item_day_in_month)
                     date.setTextColor(Color.parseColor("#ffffff"))
                 }
             }

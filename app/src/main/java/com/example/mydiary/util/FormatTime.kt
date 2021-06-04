@@ -16,15 +16,6 @@ class FormatTime {
             return formatDate.format(setCalendar.time)
         }
 
-        fun formatDateTime(year: Int, month: Int, stringFormant:String):String{
-            var formatDate = SimpleDateFormat(stringFormant, Locale.UK)
-            val setCalendar = Calendar.getInstance()
-            setCalendar.set(Calendar.YEAR, year)
-            setCalendar.set(Calendar.MONTH, month - 1)
-
-            return formatDate.format(setCalendar.time)
-        }
-
         fun formatDateTime(stringFormant:String):String{
             var formatDate = SimpleDateFormat(stringFormant, Locale.UK)
             val setCalendar = Calendar.getInstance()

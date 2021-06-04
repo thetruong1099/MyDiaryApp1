@@ -1,10 +1,7 @@
 package com.example.mydiary.database.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.example.mydiary.model.Diary
 
 @Dao
@@ -14,6 +11,12 @@ interface DiaryDao {
 
     @Update
     suspend fun updateDiary(diary: Diary)
+
+    @Delete
+    suspend fun deleteDiary(diary: Diary)
+
+    @Query("delete from diary_table")
+    suspend fun deleteAllDiary()
 
     @Query("select date_col from diary_table where year_col = :year and month_col =:month")
     fun getDiaryDateByMonth(year: Int, month: Int): LiveData<List<Int>>

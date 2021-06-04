@@ -18,8 +18,13 @@ import com.example.mydiary.adapter.DiaryOfDateAdapter
 import com.example.mydiary.model.Diary
 import com.example.mydiary.util.FormatTime
 import com.example.mydiary.viewmodel.DiaryViewModel
+import com.example.mydiary.viewmodel.SharedPreferenceViewModel
 import kotlinx.android.synthetic.main.fragment_calendar.*
 import kotlinx.android.synthetic.main.fragment_month.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.log
@@ -41,7 +46,12 @@ class MonthFragment(
         )[DiaryViewModel::class.java]
     }
 
-    private var listDayHasDiary: MutableList<MutableMap<String, Int>> = mutableListOf()
+    private val sharePreferenceViewModel by lazy {
+        ViewModelProvider(
+            this,
+            SharedPreferenceViewModel.SharePreferenceViewModelFactory(requireContext())
+        )[SharedPreferenceViewModel::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,7 +67,7 @@ class MonthFragment(
         if (currentMonth <= 0 || currentMonth > 12) {
             var list = formatMonthYear(currentYear, currentMonth)
             currentYear = list[0].toInt()
-            currentMonth = convertMonthIsInt(list[1])
+            currentMonth = list[1].toInt()
         }
 
         dayInMonthAdapter = DayInMonthAdapter(onItemSingleClick, onItemDoubleClick)
@@ -66,12 +76,19 @@ class MonthFragment(
             adapter = dayInMonthAdapter
         }
 
-        calendarItems.clear()
-        calendarItems = setCalendarItems(dayStart)
-        dayInMonthAdapter.setListItems(calendarItems)
+        setDataForAdapter()
 
-        getDateHaveDiaryByMonth(currentYear, currentMonth)
         setCurrentDay(currentYear, currentMonth)
+    }
+
+    private fun setDataForAdapter() {
+        sharePreferenceViewModel.getDayStart().observe(this, androidx.lifecycle.Observer {
+            dayStart = it
+            calendarItems.clear()
+            calendarItems = setCalendarItems(dayStart)
+            dayInMonthAdapter.setListItems(calendarItems)
+            getDateHaveDiaryByMonth(currentYear, currentMonth)
+        })
     }
 
     private fun setCalendarItems(string: String): MutableList<MutableMap<String, Int>> {
@@ -151,27 +168,9 @@ class MonthFragment(
     }
 
     private fun formatMonthYear(year: Int, month: Int): List<String> {
-        val time = FormatTime.formatDateTime(year, month, 1, "YYYY MMMM")
+        val time = FormatTime.formatDateTime(year, month, 1, "YYYY MM")
         var list: List<String> = time.split(" ")
         return list
-    }
-
-    private fun convertMonthIsInt(string: String): Int {
-        when (string) {
-            "January" -> return 1
-            "February" -> return 2
-            "March" -> return 3
-            "April" -> return 4
-            "May" -> return 5
-            "June" -> return 6
-            "July" -> return 7
-            "August" -> return 8
-            "September" -> return 9
-            "October" -> return 10
-            "November" -> return 11
-            "December" -> return 12
-        }
-        return 0
     }
 
     private fun getDateHaveDiaryByMonth(year: Int, month: Int) {
@@ -190,6 +189,7 @@ class MonthFragment(
 
             diaryViewModel.getDiaryDateByMonth(previousYear, previousMonth)
                 .observe(this, androidx.lifecycle.Observer {
+                    val listDayHasDiary: MutableList<MutableMap<String, Int>> = mutableListOf()
                     for (i in it) {
                         var map: MutableMap<String, Int> = mutableMapOf()
                         if (i >= limitLeftOfMonth) {
@@ -205,6 +205,7 @@ class MonthFragment(
         //current month
 
         diaryViewModel.getDiaryDateByMonth(year, month).observe(this, androidx.lifecycle.Observer {
+            val listDayHasDiary: MutableList<MutableMap<String, Int>> = mutableListOf()
             for (i in it) {
                 var map: MutableMap<String, Int> = mutableMapOf()
                 map["day"] = i
@@ -228,6 +229,7 @@ class MonthFragment(
 
             diaryViewModel.getDiaryDateByMonth(nextYear, nextMonth)
                 .observe(this, androidx.lifecycle.Observer {
+                    val listDayHasDiary: MutableList<MutableMap<String, Int>> = mutableListOf()
                     for (i in it) {
                         var map: MutableMap<String, Int> = mutableMapOf()
                         if (i <= limitRightOfMonth) {
@@ -333,4 +335,6 @@ class MonthFragment(
             dayInMonthAdapter.setCurrentDay(dateC)
         }
     }
+
+
 }

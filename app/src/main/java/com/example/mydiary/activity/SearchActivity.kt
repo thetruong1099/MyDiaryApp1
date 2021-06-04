@@ -29,7 +29,7 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val allDiaryAdapter = AllDiaryAdapter(onItemClick)
+        val allDiaryAdapter = AllDiaryAdapter(onItemClick, onDeleteClick)
 
         rv_diary_search.apply {
             adapter = allDiaryAdapter
@@ -44,7 +44,7 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.toString().isNotEmpty()) {
                     var keyword =
-                        "%${VietnameseCharacterUtil.removeAccent(s.toString().toLowerCase())}%"
+                        "%${s.toString().toLowerCase()}%"
                     diaryViewModel.searchDiary(keyword).observe(this@SearchActivity, Observer {
                         it.sortWith(
                             compareBy<Diary>(
@@ -71,6 +71,10 @@ class SearchActivity : AppCompatActivity() {
         intent.putExtra("Detail Diary", it)
         startActivity(intent)
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+    }
+
+    private val onDeleteClick: (diary: Diary) -> Unit = {
+        diaryViewModel.delete(it)
     }
 
     override fun finish() {

@@ -3,8 +3,9 @@
     android:shape="oval">
 
     <solid android:color="@color/river" />
-    <size
-        android:width="10dp"
-        android:height="10dp" />
+    <size android:height="10dp"
+        android:width="10dp"/>
+
+
 
 </shape>

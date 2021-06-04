@@ -4,13 +4,23 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import androidx.lifecycle.ViewModelProvider
 import com.example.mydiary.R
+import com.example.mydiary.viewmodel.SharedPreferenceViewModel
 import kotlinx.coroutines.*
 
 class StartActivity : AppCompatActivity() {
 
     private lateinit var job1: Job
     private lateinit var job2: Job
+
+    private val sharePreferenceViewModel by lazy {
+        ViewModelProvider(
+            this,
+            SharedPreferenceViewModel.SharePreferenceViewModelFactory(this)
+        )[SharedPreferenceViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,8 +29,7 @@ class StartActivity : AppCompatActivity() {
         job1 = Job()
         job2 = Job()
 
-        var sharedPreferences = getSharedPreferences("myData", Context.MODE_PRIVATE)
-        var password = sharedPreferences.getString("myPassword", "")
+        val password = sharePreferenceViewModel.getPassword()
         if (password == "") setToSignupActivity()
         else setToLoginActivity()
     }
