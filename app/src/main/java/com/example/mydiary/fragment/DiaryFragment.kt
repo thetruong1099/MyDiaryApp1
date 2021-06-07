@@ -90,7 +90,7 @@ class DiaryFragment : CustomBackStackFragment() {
         requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
     }
 
-    private val onDeleteClick: (diary: Diary) ->Unit ={
+    private val onDeleteClick: (diary: Diary) -> Unit = {
         diaryViewModel.delete(it)
     }
 }

@@ -85,7 +85,7 @@ class MenuFragment : CustomBackStackFragment() {
 
         btn_change_password.setOnClickListener {
             val changePasswordFragment = ChangePasswordFragment()
-            changePasswordFragment.show(childFragmentManager,"TAG")
+            changePasswordFragment.show(childFragmentManager, "TAG")
         }
 
         btn_backup.setOnClickListener { exportCSV() }

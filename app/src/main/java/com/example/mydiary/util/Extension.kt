@@ -26,16 +26,16 @@ fun NavController.removeElementOverlap(navController: NavController) {
     var count = 2
     var checkDuplicate = false
 
-    if (arr.size>3 && arr[arr.size-2].destination.id == R.id.calendarFragment){
+    if (arr.size > 3 && arr[arr.size - 2].destination.id == R.id.calendarFragment) {
         navController.popBackStack(R.id.calendarFragment, true)
-        navController.navigate(arr[arr.size-1].destination.id)
+        navController.navigate(arr[arr.size - 1].destination.id)
     }
 
     for (i in 2 until arr.size - 1) {
         count++
-        if (arr[i].destination.id ==arr[arr.size-1].destination.id){
+        if (arr[i].destination.id == arr[arr.size - 1].destination.id) {
             navController.popBackStackAllInstances(arr[i].destination.id, true)
-            checkDuplicate=true
+            checkDuplicate = true
             break
         }
     }
