@@ -2,35 +2,29 @@ package com.example.mydiary.fragment
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.mydiary.R
-import com.example.mydiary.database.repository.FileRepository
 import com.example.mydiary.model.Diary
+import com.example.mydiary.util.CustomBackStackFragment
 import com.example.mydiary.viewmodel.DiaryViewModel
 import com.example.mydiary.viewmodel.FileViewModel
 import com.example.mydiary.viewmodel.SharedPreferenceViewModel
 import kotlinx.android.synthetic.main.fragment_menu.*
-import java.io.BufferedReader
 import java.io.File
-import java.io.FileInputStream
-import java.io.InputStreamReader
 
 
-class MenuFragment : Fragment() {
+class MenuFragment : CustomBackStackFragment() {
 
     private val sharePreferenceViewModel by lazy {
         ViewModelProvider(

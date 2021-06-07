@@ -16,11 +16,11 @@ import com.example.mydiary.activity.SearchActivity
 import com.example.mydiary.activity.WriteDiaryActivity
 import com.example.mydiary.adapter.AllDiaryAdapter
 import com.example.mydiary.model.Diary
+import com.example.mydiary.util.CustomBackStackFragment
 import com.example.mydiary.viewmodel.DiaryViewModel
-import kotlinx.android.synthetic.main.activity_write_diary.*
 import kotlinx.android.synthetic.main.fragment_diary.*
 
-class DiaryFragment : Fragment() {
+class DiaryFragment : CustomBackStackFragment() {
 
     private val diaryViewModel: DiaryViewModel by lazy {
         ViewModelProvider(

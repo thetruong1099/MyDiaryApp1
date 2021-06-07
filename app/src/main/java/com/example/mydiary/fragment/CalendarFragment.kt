@@ -1,14 +1,11 @@
 package com.example.mydiary.fragment
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
@@ -17,18 +14,15 @@ import com.example.mydiary.activity.DetailDiaryActivity
 import com.example.mydiary.adapter.CalendarViewPagerAdapter
 import com.example.mydiary.adapter.DiaryOfDateAdapter
 import com.example.mydiary.model.Diary
+import com.example.mydiary.util.CustomBackStackFragment
 import com.example.mydiary.util.FormatTime
 import com.example.mydiary.viewmodel.DiaryViewModel
 import com.example.mydiary.viewmodel.SharedPreferenceViewModel
 import kotlinx.android.synthetic.main.fragment_calendar.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CalendarFragment : Fragment() {
+class CalendarFragment : CustomBackStackFragment() {
 
     private var currentYear = 0
     private var currentMonth = 0
