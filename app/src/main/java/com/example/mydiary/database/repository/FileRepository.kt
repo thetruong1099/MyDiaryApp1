@@ -14,6 +14,20 @@ import java.lang.StringBuilder
 
 class FileRepository(val context: Context) {
 
+    suspend fun writeDataToFile(uri: Uri, list: MutableList<Diary>) {
+        withContext(Dispatchers.IO) {
+            val stringBuilder: StringBuilder = StringBuilder()
+            stringBuilder.append("year_col" + "," + "month_col" + "," + "date_col" + "," + "time_col" + "," + "title_col" + "," + "content_col")
+            for (i in list) {
+                stringBuilder.append("\n" + i.year + "," + i.month + "," + i.date + "," + i.time + "," + i.title + "," + i.content)
+            }
+
+            val outFile = context.contentResolver.openOutputStream(uri!!)
+            outFile!!.write(stringBuilder.toString().toByteArray())
+            outFile.close()
+        }
+    }
+
     suspend fun writeDataToFile(list: MutableList<Diary>) {
         withContext(Dispatchers.IO) {
             val data = StringBuilder()
@@ -52,7 +66,6 @@ class FileRepository(val context: Context) {
         return withContext(Dispatchers.IO) {
             val fileInput: FileInputStream = context.openFileInput("data.csv")
             var line: List<String> = BufferedReader(InputStreamReader(fileInput)).readLines()
-            fileInput.close()
             fileInput.close()
             return@withContext line
         }

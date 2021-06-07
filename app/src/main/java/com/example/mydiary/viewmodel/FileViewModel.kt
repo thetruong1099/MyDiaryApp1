@@ -13,14 +13,17 @@ import java.lang.IllegalArgumentException
 class FileViewModel(context: Context) : ViewModel() {
     private val fileRepository: FileRepository = FileRepository(context)
 
+    fun writeDataToFile(uri: Uri, list: MutableList<Diary>) =
+        viewModelScope.launch { fileRepository.writeDataToFile(uri, list) }
+
     fun writeDataToFile(list: MutableList<Diary>) =
         CoroutineScope(Dispatchers.IO).launch { fileRepository.writeDataToFile(list) }
 
-    fun readDataFromFile(uri: Uri):List<String> = runBlocking {
+    fun readDataFromFile(uri: Uri): List<String> = runBlocking {
         fileRepository.readDataFromFile(uri)
     }
 
-    fun readDataFromFileInternal():List<String> = runBlocking {
+    fun readDataFromFileInternal(): List<String> = runBlocking {
         fileRepository.readDataFromFileInternal()
     }
 
